@@ -13,7 +13,6 @@ interface Task {
 type FetchTasksResponse = Task[];
 
 interface TasksState {
-  [x: string]: any;
   tasks: Task[];
   loading: boolean;
   error: string | null;

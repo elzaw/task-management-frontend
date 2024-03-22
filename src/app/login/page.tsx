@@ -1,7 +1,11 @@
 "use client";
 import React, { useState } from "react";
+import instance from "@/axois/instance";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const LoginForm: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -20,10 +24,29 @@ const LoginForm: React.FC = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle login submission logic here
-    console.log("Form submitted:", formData);
+    try {
+      const response = await instance.post("/auth/login", formData);
+
+      if (response.status === 200) {
+        const data = response.data;
+        console.log("Login successful:", data);
+
+        // Save the token in local storage
+        localStorage.setItem("token", data.access_token);
+
+        router.push("/tasks");
+
+        // Optionally, you can redirect the user or perform other actions upon successful login.
+      } else {
+        console.error("Login failed:", response.statusText);
+        // Optionally, you can display an error message to the user.
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      // Handle any network errors or other exceptions here.
+    }
   };
 
   return (
