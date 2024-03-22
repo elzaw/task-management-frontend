@@ -17,6 +17,7 @@ const Navbar = () => {
     { url: "/signup", title: "Signup" },
     { url: "/login", title: "Login" },
     { url: "/tasks", title: "Tasks" },
+    { url: "/profile", title: "Profile" },
   ];
 
   useEffect(() => {

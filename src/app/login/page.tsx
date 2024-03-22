@@ -3,8 +3,12 @@ import React, { useState } from "react";
 import instance from "@/axois/instance";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import jwt from "jsonwebtoken";
+import { useDispatch } from "react-redux";
+import { setUserData } from "@/store/slices/userSlice";
 
 const LoginForm: React.FC = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",
@@ -35,8 +39,23 @@ const LoginForm: React.FC = () => {
 
         // Save the token in local storage
         localStorage.setItem("token", data.access_token);
+        const token = localStorage.getItem("token");
+        if (token) {
+          try {
+            const decodedToken = jwt.verify(token, "this-my-secret");
+            dispatch(setUserData(decodedToken));
+          } catch (error) {
+            console.error("Error verifying token:", error);
+            // Handle invalid token or verification errors here
+          }
+        } else {
+          console.error("Token not found in localStorage");
+          // Handle case where token is not found
+        }
 
-        router.push("/tasks");
+        setTimeout(() => {
+          router.push("/tasks");
+        }, 2000);
 
         // Optionally, you can redirect the user or perform other actions upon successful login.
       } else {

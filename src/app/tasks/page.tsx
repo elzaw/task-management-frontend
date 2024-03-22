@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { FormEventHandler, useEffect, useState } from "react";
 import instance from "../../axois/instance";
 import {
   CardTitle,
@@ -72,7 +72,9 @@ const TaskList = () => {
     fetchTasksFromServer();
   }, []);
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -80,7 +82,7 @@ const TaskList = () => {
     });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     try {
       // Manually add the userId to the form data
